@@ -71,6 +71,29 @@ uv run tech-doc-mcp index <source> --version 0.1.0
 uv run tech-doc-mcp serve
 ```
 
+### 通过 Agent 使用（推荐）
+
+上面 4 步命令**不需要人工记忆**——配置好项目 skill 后，在 Claude Code 里用自然语言对话，Agent 会自动完成「爬取 → 清洗 → 索引 → 启动」全流程。
+
+**一次性配置 skill**（把仓库里的 `skills/add-docs` 挂到 Claude Code 的技能目录）：
+
+```bash
+mkdir -p .claude/skills
+# 软链接（推荐，仓库更新后自动同步）；或用 cp -r 复制
+ln -s ../../skills/add-docs .claude/skills/add-docs
+```
+
+之后全程对话即可，无需记命令：
+
+| 你说 | Agent 做的事 |
+|------|------|
+| `/add-docs fastapi` 或 `/add-docs https://...` | 分析站点结构 → 生成爬虫脚本 → 爬取到 `docs/{source}/raw/` |
+| “清洗 fastapi 文档” | 调用 `cleaner` 把 `raw/` → `clean/` |
+| “把 fastapi 索引一下” | 执行 `index`，分块 + embedding 写入 ChromaDB |
+| “启动文档服务” | 拉起 MCP Server，供搜索调用 |
+
+使用者只需描述意图，命令与参数由 Agent 代劳。
+
 ### 接入 Claude Code
 
 将本地 MCP Server 加入 Claude Code 的 MCP 配置后,Agent 即可调用以下工具:
