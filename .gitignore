@@ -27,3 +27,6 @@ CLAUDE.md
 
 # ── 杂项 ────────────────────────────────────────
 skills-main.zip
+
+# ── 评测缓存（embedding + 候选 + judge 判分，可重生成）─
+eval/.cache/

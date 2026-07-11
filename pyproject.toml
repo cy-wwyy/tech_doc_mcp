@@ -9,13 +9,11 @@ dependencies = [
     "chromadb>=1.5.9",
     "fastmcp>=3.4.3",
     "httpx>=0.28.1",
-    "jieba>=0.42.1",
     "lxml>=6.1.1",
     "markdownify>=1.2.3",
     "openai>=2.44.0",
     "python-dotenv>=1.2.2",
     "pyyaml>=6.0.3",
-    "rank-bm25>=0.2.2",
 ]
 
 [project.scripts]

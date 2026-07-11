@@ -2,12 +2,12 @@
 
 > 本地技术文档 MCP 服务器 —— 为 AI Agent 提供最新框架文档的实时混合搜索能力。
 
-解决 LLM 训练数据滞后导致的过时 API 调用问题:把框架官方文档爬取到本地,经 LLM 清洗、分块、建立向量 + BM25 双索引,通过 [MCP](https://modelcontextprotocol.io) 协议暴露给 Claude Code 等 Agent,查询时返回最新、可溯源的文档片段。
+解决 LLM 训练数据滞后导致的过时 API 调用问题:把框架官方文档爬取到本地,经 LLM 清洗、分块、建立向量索引(基于去代码正文),通过 [MCP](https://modelcontextprotocol.io) 协议暴露给 Claude Code 等 Agent,查询时返回最新、可溯源的文档片段。
 
 ## 特性
 
-- **混合搜索** —— ChromaDB 语义检索 + BM25 关键词检索,RRF 融合 (k=60),兼顾语义相关与精确匹配
-- **中英分词** —— jieba 分词,BM25 对中英文混合内容友好
+- **混合搜索** —— ChromaDB 语义检索为主干,关键词按 presence + 饱和做乘性加权重排(boost-only),兼顾语义相关与精确 API 名匹配。设计依据见 [`docs/search-fusion-redesign.md`](docs/search-fusion-redesign.md)
+- **抗代码噪声** —— 向量基于去代码正文,关键词在含代码全文上按"是否出现"而非"出现几次"计分,免疫代码符号高频膨胀
 - **面向 Agent 的极简工具** —— 只需 4 个 MCP 工具即可覆盖搜索/阅读/浏览
 - **LLM 文档清洗** —— 自动把爬虫原始 HTML/Markdown 清洗为干净正文,3 并发 + 指数退避重试
 - **多源多版本共存** —— 每个文档源独立 Collection,新旧版本并存,搜索取最新版本
@@ -27,9 +27,9 @@
 
 搜索链路 (Agent 视角):
   search_docs(query, source, keywords, limit)
-    ├─ keywords → BM25 关键词搜索
-    ├─ query    → ChromaDB 语义搜索
-    └─ 两路 RRF 融合 → 按 path 去重 → top-K 返回
+    ├─ query    → ChromaDB 语义搜索 → top-N 候选(主干)
+    ├─ keywords → 候选内 presence + 饱和计分(boost-only)
+    └─ 乘性融合 sem·(1+λ·kw) → 按 path 去重 → top-K 返回
 ```
 
 ## 安装
@@ -123,7 +123,7 @@ uv run tech-doc-mcp serve
 
 ## 技术栈
 
-FastMCP · ChromaDB · rank-bm25 · jieba · OpenAI SDK · BeautifulSoup / markdownify · httpx · Typer
+FastMCP · ChromaDB · OpenAI SDK · BeautifulSoup / markdownify · httpx · Typer
 
 ## 项目文档
 

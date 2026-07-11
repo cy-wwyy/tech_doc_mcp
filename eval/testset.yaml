@@ -1,0 +1,157 @@
+# 搜索评测集 —— 混合检索质量的“真值”
+#
+# 每条:query(自然语言) + keywords(Agent 会传的精确词) + gold(期望命中的页面 path)。
+# gold 为人工起草、可审计;网格搜索用它算 nDCG@10 / MRR / Recall@5,LLM-judge 独立复核。
+# 设计覆盖:单关键词、多关键词、以及“关键词在代码里高频”的对抗样本(验证饱和+boost-only 不被污染)。
+#
+# 改动本文件后需清 eval/.cache/。
+
+- source: fastapi
+  version: "0.139.0"
+  query: "如何在依赖里获取当前登录用户"
+  keywords: ["Depends", "OAuth2"]
+  gold: ["tutorial/security/get-current-user.md", "tutorial/security/simple-oauth2.md"]
+
+- source: fastapi
+  version: "0.139.0"
+  query: "OAuth2 密码流第一步怎么配置 token URL"
+  keywords: ["OAuth2PasswordBearer"]        # 纯代码标识符,正文出现 0 次
+  gold: ["tutorial/security/first-steps.md", "tutorial/security/simple-oauth2.md"]
+
+- source: fastapi
+  version: "0.139.0"
+  query: "怎么在返回响应之后再到后台执行任务"
+  keywords: ["BackgroundTasks"]
+  gold: ["tutorial/background-tasks.md", "reference/background.md"]
+
+- source: fastapi
+  version: "0.139.0"
+  query: "如何用 JWT token 做登录认证"
+  keywords: ["JWT"]
+  gold: ["tutorial/security/oauth2-jwt.md"]
+
+- source: fastapi
+  version: "0.139.0"
+  query: "路径参数怎么加数值大小校验"
+  keywords: ["Path", "gt"]                   # Path 在代码里极常见,对抗样本
+  gold: ["tutorial/path-params-numeric-validations.md"]
+
+- source: nextjs
+  version: "16.2.10"
+  query: "在服务端组件里获取数据"
+  keywords: ["fetch"]                        # fetch 满文档皆是,强对抗样本
+  gold: ["docs/app/getting-started/fetching-data.md"]
+
+- source: nextjs
+  version: "16.2.10"
+  query: "如何设置页面 metadata 做 SEO"
+  keywords: ["generateMetadata"]
+  gold: ["docs/app/api-reference/functions/generate-metadata.md", "docs/app/getting-started/metadata-and-og-images.md"]
+
+- source: nextjs
+  version: "16.2.10"
+  query: "客户端组件里怎么做路由跳转"
+  keywords: ["useRouter"]
+  gold: ["docs/app/api-reference/functions/use-router.md", "docs/app/getting-started/linking-and-navigating.md"]
+
+- source: nextjs
+  version: "16.2.10"
+  query: "怎么配置 URL 重定向"
+  keywords: ["redirects"]
+  gold: ["docs/app/api-reference/config/next-config-js/redirects.md"]
+
+- source: nextjs
+  version: "16.2.10"
+  query: "用服务端 action 提交表单并变更数据"
+  keywords: ["use server", "Server Actions"]
+  gold: ["docs/app/guides/server-actions.md", "docs/app/getting-started/mutating-data.md"]
+
+- source: tailwindcss
+  version: "4.1"
+  query: "怎么用 flex 让子元素横向排列"
+  keywords: ["flex"]                         # flex 全站高频,对抗样本
+  gold: ["docs/flex.md", "docs/flex-direction.md"]
+
+- source: tailwindcss
+  version: "4.1"
+  query: "如何提取自定义样式类 @apply"
+  keywords: ["@apply"]
+  gold: ["docs/functions-and-directives.md", "docs/adding-custom-styles.md"]
+
+- source: tailwindcss
+  version: "4.1"
+  query: "鼠标悬停时改变元素样式"
+  keywords: ["hover"]
+  gold: ["docs/hover-focus-and-other-states.md"]
+
+- source: tailwindcss
+  version: "4.1"
+  query: "网格布局怎么设置列数"
+  keywords: ["grid-cols"]
+  gold: ["docs/grid-template-columns.md"]
+
+- source: tailwindcss
+  version: "4.1"
+  query: "怎么开启暗色模式"
+  keywords: ["dark"]
+  gold: ["docs/dark-mode.md"]
+
+- source: shadcn
+  version: "latest"
+  query: "下拉菜单组件怎么用"
+  keywords: ["DropdownMenu"]                 # 代码内 1310 次,极端对抗样本
+  gold: ["docs/components/dropdown-menu.md"]
+
+- source: shadcn
+  version: "latest"
+  query: "做一个带排序分页的数据表格"
+  keywords: ["DataTable"]
+  gold: ["docs/components/data-table.md"]
+
+- source: shadcn
+  version: "latest"
+  query: "表单校验怎么和 react-hook-form 集成"
+  keywords: ["react-hook-form"]
+  gold: ["docs/forms/react-hook-form.md"]
+
+- source: shadcn
+  version: "latest"
+  query: "在 Next.js 里配置暗色模式主题切换"
+  keywords: ["ThemeProvider"]
+  gold: ["docs/dark-mode/next.md", "docs/dark-mode.md"]
+
+- source: shadcn
+  version: "latest"
+  query: "命令面板搜索组件怎么用"
+  keywords: ["Command"]
+  gold: ["docs/components/command.md"]
+
+- source: sqlmodel
+  version: "0.0.22"
+  query: "如何定义带主键的表模型"
+  keywords: ["Field", "table=True"]
+  gold: ["tutorial/create-db-and-table.md"]
+
+- source: sqlmodel
+  version: "0.0.22"
+  query: "多对多关系怎么用 link model 定义"
+  keywords: ["Relationship", "link_model"]
+  gold: ["tutorial/many-to-many/create-models-with-link.md", "tutorial/many-to-many.md"]
+
+- source: sqlmodel
+  version: "0.0.22"
+  query: "用 select 查询并加 where 过滤条件"
+  keywords: ["select", "where"]             # select 代码高频,对抗样本
+  gold: ["tutorial/where.md", "tutorial/select.md"]
+
+- source: sqlmodel
+  version: "0.0.22"
+  query: "在 FastAPI 里用 session 依赖注入"
+  keywords: ["Session", "Depends"]          # Session 代码内 2629 次,极端对抗样本
+  gold: ["tutorial/fastapi/session-with-dependency.md"]
+
+- source: sqlmodel
+  version: "0.0.22"
+  query: "怎么给字段建立索引"
+  keywords: ["index=True"]
+  gold: ["tutorial/indexes.md"]

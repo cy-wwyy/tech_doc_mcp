@@ -154,11 +154,6 @@ class VectorStore:
                 results.append(result["documents"][0])
         return results
 
-    def get_all(self, source: str, version: str) -> dict:
-        """获取 collection 的全部数据（documents + metadatas），供 BM25 初始化"""
-        collection = self.get_or_create_collection(source, version)
-        return collection.get(include=["documents", "metadatas"])
-
     def update_content_type(self, source: str, version: str, content_type: str = "doc") -> int:
         """为已有 collection 的所有 chunk 补 content_type 字段"""
         collection = self.get_or_create_collection(source, version)
