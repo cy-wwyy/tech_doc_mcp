@@ -56,7 +56,7 @@ description: "添加文档源 — 支持框架名称、URL 两种输入，自动
 
 **Claude 生成一个独立脚本，在终端运行（不进 Claude 上下文）：**
 
-脚本做这些事：
+脚本保存到 `scripts/crawlers/{name}.py`，做这些事：
 1. `httpx.AsyncClient` 并发爬取所有页面 HTML（并发 5，间隔 1s+）
 2. 用阶段 1 确定的选择器提取正文 HTML
 3. 移除导航/侧边栏/页脚等元素

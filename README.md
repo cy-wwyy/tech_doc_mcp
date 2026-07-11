@@ -59,7 +59,7 @@ cp .env.example .env                 # 填入 LLM_API_KEY / EMBEDDING_API_KEY
 ```bash
 # 1. 爬取文档源 → docs/{source}/raw/
 #    可参考 skills/add-docs 的工作流：分析站点结构 → 生成爬虫脚本 → 保存原始数据
-uv run python crawlers/<script>.py
+uv run python scripts/crawlers/<script>.py
 
 # 2. LLM 清洗 raw/ → clean/
 uv run python -m tech_doc_mcp.processor.cleaner <source_name>
