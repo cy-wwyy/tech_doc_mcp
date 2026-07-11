@@ -72,3 +72,15 @@ def get_embedding_config(config: dict | None = None) -> dict[str, str | int]:
     if config is None:
         config = load_config()
     return config["embedding"]
+
+
+def get_search_config(config: dict | None = None) -> dict[str, Any]:
+    """获取搜索配置(可选节,缺省时返回空 dict，由调用方给默认值)
+
+    支持项:
+        candidate_pool: 语义粗筛候选数(越大召回越全，但下游 rerank 等成本越高)
+    """
+    if config is None:
+        config = load_config()
+    return config.get("search") or {}
+

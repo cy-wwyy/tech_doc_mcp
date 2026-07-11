@@ -17,3 +17,7 @@ embedding:
   model: text-embedding-3-small                 # Embedding 模型
   dimensions: 1536                              # 向量维度（需与模型匹配）
   batch_size: 10                                # 单次请求最大条数
+
+# ── Search — 混合搜索参数（可选，缺省 candidate_pool=30）─────
+search:
+  candidate_pool: 30                            # 语义粗筛候选数：越大召回越全，下游成本越高

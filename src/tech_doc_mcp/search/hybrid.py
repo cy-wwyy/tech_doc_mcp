@@ -9,12 +9,13 @@
           弱语义页天然压住 —— 经网格搜索 + LLM-judge 交叉验证选定,对 λ 不敏感。
 """
 
+from tech_doc_mcp.config import get_search_config
 from tech_doc_mcp.store.vector_store import VectorStore
 
 import re
 
 # ── 融合参数(由 eval/ 网格搜索 + LLM-judge 敲定,详见 design doc)──
-N_CANDIDATES = 30   # 语义候选池;实测 gold 100% 落在 top-30 内
+DEFAULT_CANDIDATE_POOL = 30   # 语义粗筛候选数默认值;可被 config.yaml 的 search.candidate_pool 覆盖
 K1 = 2.0            # 饱和常数:count 1↔3 有别、3↔300 趋同;越大低端分辨率越高
 LAMBDA = 0.5        # 关键词权重
 SEM_FLOOR = 0.1     # 语义归一化下限:避免候选池最差项被归一化到 0 而彻底压死
@@ -59,6 +60,10 @@ class HybridSearcher:
         self.source = source
         self.version = version
         self._store = store
+        # 粗筛候选数:config.yaml 的 search.candidate_pool 优先,缺省回退默认
+        self._candidate_pool = int(
+            get_search_config().get("candidate_pool", DEFAULT_CANDIDATE_POOL)
+        )
 
     def search(
         self,
@@ -76,7 +81,7 @@ class HybridSearcher:
             limit:           返回条数
         """
         cand = self._store.query(
-            self.source, self.version, query_embedding, n_results=N_CANDIDATES,
+            self.source, self.version, query_embedding, n_results=self._candidate_pool,
         )
         if not cand:
             return []
