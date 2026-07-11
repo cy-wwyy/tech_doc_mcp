@@ -1,0 +1,29 @@
+# ── 敏感配置（含真实 API Key / 内网地址）────────
+config.yaml
+.env
+
+# ── 虚拟环境 ────────────────────────────────────
+.venv/
+
+# ── 索引数据（ChromaDB，205MB，可重新生成）──────
+data/
+
+# ── 源文档：raw 爬虫原始数据 + clean 清洗结果 ────
+# 所有框架文档均可重新爬取/清洗，不纳入版本库
+docs/*/raw/
+docs/*/clean/
+# 保留 docs/DEVLOG.md 等说明文件
+
+# ── Python 缓存 ─────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# ── Claude Code 相关（Agent 配置/指令，非项目本体）─
+.claude/
+CLAUDE.md
+
+# ── 杂项 ────────────────────────────────────────
+skills-main.zip

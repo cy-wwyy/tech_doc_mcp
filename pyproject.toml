@@ -1,0 +1,28 @@
+[project]
+name = "tech-doc-mcp"
+version = "0.1.0"
+description = "Local tech documentation MCP server with RAG search"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "chromadb>=1.5.9",
+    "fastmcp>=3.4.3",
+    "httpx>=0.28.1",
+    "jieba>=0.42.1",
+    "lxml>=6.1.1",
+    "markdownify>=1.2.3",
+    "openai>=2.44.0",
+    "python-dotenv>=1.2.2",
+    "pyyaml>=6.0.3",
+    "rank-bm25>=0.2.2",
+]
+
+[project.scripts]
+tech-doc-mcp = "tech_doc_mcp.cli.main:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tech_doc_mcp"]

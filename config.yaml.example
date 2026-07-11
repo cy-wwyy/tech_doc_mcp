@@ -1,0 +1,19 @@
+# tech-doc-mcp 配置文件模板
+# cp config.yaml.example config.yaml 并编辑
+
+# ── LLM — 用于文档清洗（cleaner.py）──────────────
+llm:
+  api_base: https://api.deepseek.com/v1        # OpenAI 兼容 API 地址
+  api_key: ${LLM_API_KEY}                       # 环境变量或直接填写
+  model: deepseek-v4-flash                      # 清洗用模型（OpenAI 兼容即可）
+  # extra_body:                                 # 可选：传给 API 的额外参数
+  #   thinking:
+  #     type: disabled
+
+# ── Embedding — 用于向量搜索（vector_store）─────
+embedding:
+  api_base: https://api.openai.com/v1           # OpenAI 兼容 API 地址
+  api_key: ${EMBEDDING_API_KEY}                  # 环境变量或直接填写
+  model: text-embedding-3-small                 # Embedding 模型
+  dimensions: 1536                              # 向量维度（需与模型匹配）
+  batch_size: 10                                # 单次请求最大条数
