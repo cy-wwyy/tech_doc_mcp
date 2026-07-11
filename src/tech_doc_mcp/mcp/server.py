@@ -121,12 +121,16 @@ def search_docs(
 ) -> str:
     """搜索技术文档。用于查找 API 用法、配置方式、代码示例等。
 
+    检索策略:语义(向量)为主召回与主排序；keywords 作为精确信号，把"确实出现这些
+    符号"的语义相关页往前提(boost-only:只重排语义候选，不会引入无关页)。
+
     参数:
         query:    自然语言查询，描述要搜索的概念。如 "how to implement OAuth2 authentication"
         source:   文档源名称，如 "fastapi"。用 list_sources 查看可用源。
-        keywords: 可选，只在精确查找 API 符号/函数名/配置项时使用。
-                  如 ["create_access_token", "OAuth2PasswordBearer"]。
-                  常规概念搜索（如"如何实现登录"）不要传此参数，传了反而会引入噪音。
+        keywords: 可选，精确标识符列表(API 名/函数名/配置项)，如 ["OAuth2PasswordBearer", "create_access_token"]。
+                  何时用:答案必须包含某个确切符号、尤其是只出现在代码里的 API 名时。
+                  安全:只对语义相关结果重排，不引入无关页、不会让结果变差；出现几次不影响(按是否出现计)。
+                  建议:用独特标识符，避免 "id"/"get"/"in" 这类过短或过泛的词。
         limit:    返回条数，默认 10。
 
     返回格式:
