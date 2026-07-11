@@ -58,6 +58,7 @@ cp .env.example .env                 # 填入 LLM_API_KEY / EMBEDDING_API_KEY
 
 ```bash
 # 1. 爬取文档源 → docs/{source}/raw/
+#    可参考 skills/add-docs 的工作流：分析站点结构 → 生成爬虫脚本 → 保存原始数据
 uv run python crawlers/<script>.py
 
 # 2. LLM 清洗 raw/ → clean/
@@ -87,6 +88,7 @@ FastMCP · ChromaDB · rank-bm25 · jieba · OpenAI SDK · BeautifulSoup / markd
 
 ## 项目文档
 
+- [`skills/add-docs/SKILL.md`](skills/add-docs/SKILL.md) —— 文档爬取工作流:站点分析 → 页面过滤 → 生成爬虫脚本
 - [`ROADMAP.md`](ROADMAP.md) —— 迭代路线图:已完成项 + 待处理项
 - [`docs/DEVLOG.md`](docs/DEVLOG.md) —— 开发日志
 
