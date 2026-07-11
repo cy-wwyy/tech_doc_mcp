@@ -17,6 +17,14 @@
 
 ## 已解决
 
+### ✅ 分块与清洗根治 + 重索引（2026-07-11，详见 `docs/search-fusion-redesign.md` §9）
+- chunker 三 bug:`chunk_size` 死参数(阈值全改为由 size 派生)、短节合并改前向、坏脚本 `index_docs.py`
+- ` ```markdown ` 散文围栏 artifact(LLM 把整页包成代码块,~37 篇标题被剥):cleaner 提示词+后处理解包 + loader 防御解包
+- chunk-size 曲线:1024 最优但曲线噪声大(20 query),保持 1024 不改
+- 评估 qwen3-rerank → 不引入(边际提升不抵 ~1万token/query 成本)
+- 粗筛 `candidate_pool` 移入 config
+- 重索引 5 源(覆盖非叠加):无退化(基线 0.8993→0.9027 落噪声内),tailwind 围栏页语义回升
+
 ### ✅ B2. chunk overlap 膨胀
 chunker 重构：overlap 仅施加于同一 section 内的非首个 chunk（人工边界），从原文本读 overlap 不级联。
 
