@@ -7,6 +7,7 @@
 import re
 from pathlib import Path
 
+from tech_doc_mcp.processor.cleaner import unwrap_outer_prose_fence
 from tech_doc_mcp.store.models import SourceDocument
 
 
@@ -34,6 +35,8 @@ def load_documents(source: str, docs_dir: Path) -> list[SourceDocument]:
         metadata = _parse_frontmatter(text)
         # 去除 frontmatter，保留纯正文
         clean_text = _strip_frontmatter(text)
+        # 防御:解包"整篇被 ```markdown 等散文围栏包裹"的清洗 artifact
+        clean_text = unwrap_outer_prose_fence(clean_text)
 
         doc_id = f"{source}::{rel_path}"
         doc_id = _normalize_id(doc_id)
