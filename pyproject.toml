@@ -2,6 +2,7 @@
 name = "tech-doc-mcp"
 version = "0.1.0"
 description = "Local tech documentation MCP server with RAG search"
+license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
     "beautifulsoup4>=4.15.0",
